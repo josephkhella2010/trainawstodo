@@ -3,6 +3,8 @@ frontend:
   phases:
     preBuild:
       commands:
+        - nvm install 20
+        - nvm use 20
         - cd frontend/todo
         - npm ci
     build:
@@ -14,4 +16,4 @@ frontend:
       - "**/*"
   cache:
     paths:
-      - frontend/train/node_modules/**
+      - frontend/todo/node_modules/**
