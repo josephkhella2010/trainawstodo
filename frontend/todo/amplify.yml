@@ -3,13 +3,13 @@ frontend:
   phases:
     preBuild:
       commands:
-        - cd frontend/train
+        - cd frontend/todo
         - npm ci
     build:
       commands:
         - npm run build
   artifacts:
-    baseDirectory: frontend/train/build
+    baseDirectory: frontend/todo/build
     files:
       - "**/*"
   cache:
