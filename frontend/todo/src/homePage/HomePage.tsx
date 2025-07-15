@@ -52,7 +52,7 @@ export default function HomePage() {
             <li>
               {" "}
               {index + 1}- title:{item.title} - Description:{item.description} -
-              Price:{item.price} $$
+              Price:{item.price} $$$$
             </li>
           );
         })}
