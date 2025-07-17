@@ -1,76 +1,10 @@
-/* // schema/BookSchema.js
 const { ddbDocClient } = require("../congifDynomdb");
-const { PutCommand } = require("@aws-sdk/lib-dynamodb");
-
-const TABLE_NAME = "Book";
-
-class Book {
-  static async create({ title, description, price }) {
-    const item = {
-      id,
-      title,
-      description,
-      price,
-    };
-    const params = {
-      TableName: TABLE_NAME,
-      Item: item,
-    };
-
-    await ddbDocClient.send(new PutCommand(params));
-
-    return item; // Return the inserted item (including generated id)
-  }
-}
-
-module.exports = { Book };
- */
-/* const { ddbDocClient } = require("../congifDynomdb");
-const { PutCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
-
-const BOOKS_TABLE = "Book";
-const COUNTERS_TABLE = "Counters";
-
-// Atomically increment the counter and get the next ID as a string
-async function getNextBookId() {
-  const params = {
-    TableName: COUNTERS_TABLE,
-    Key: { counterName: "bookId" },
-    UpdateExpression: "SET #v = if_not_exists(#v, :zero) + :inc",
-    ExpressionAttributeNames: { "#v": "value" },
-    ExpressionAttributeValues: { ":inc": 1, ":zero": 0 },
-    ReturnValues: "UPDATED_NEW",
-  };
-
-  const result = await ddbDocClient.send(new UpdateCommand(params));
-  return result.Attributes.value.toString(); // e.g., "1", "2", "3" ...
-}
-
-class Book {
-  static async create({ title, description, price }) {
-    const id = await getNextBookId();
-
-    const item = {
-      id,
-      title,
-      description,
-      price,
-    };
-
-    const params = {
-      TableName: BOOKS_TABLE,
-      Item: item,
-    };
-
-    await ddbDocClient.send(new PutCommand(params));
-    return item;
-  }
-}
- */
-
-// backend/schema/BookDynamoDb.js
-const { ddbDocClient } = require("../congifDynomdb");
-const { PutCommand, ScanCommand } = require("@aws-sdk/lib-dynamodb");
+const {
+  PutCommand,
+  ScanCommand,
+  DeleteCommand,
+  GetCommand,
+} = require("@aws-sdk/lib-dynamodb");
 
 const BOOKS_TABLE = "Book";
 
@@ -118,7 +52,29 @@ async function findAll() {
   return data.Items || [];
 }
 
+//✅ Delete a book by ID
+async function deleteBook(id) {
+  const params = {
+    TableName: BOOKS_TABLE,
+    Key: { id },
+  };
+
+  await ddbDocClient.send(new DeleteCommand(params));
+  return { message: "Book deleted successfully" };
+}
+//✅ Delete a book by ID
+async function getBookById(id) {
+  const params = {
+    TableName: BOOKS_TABLE,
+    Key: { id },
+  };
+  const result = await ddbDocClient.send(new GetCommand(params));
+  return result.Item;
+}
+
 module.exports = {
   create,
   findAll,
+  deleteBook,
+  getBookById,
 };
