@@ -71,10 +71,27 @@ async function getBookById(id) {
   const result = await ddbDocClient.send(new GetCommand(params));
   return result.Item;
 }
+//✅ Delete a book by ID
+
+async function putBook(id, { title, description, price }) {
+  const params = {
+    TableName: "Book",
+    Item: {
+      id,
+      title,
+      description,
+      price,
+    },
+  };
+
+  await ddbDocClient.send(new PutCommand(params));
+  return params.Item;
+}
 
 module.exports = {
   create,
   findAll,
   deleteBook,
   getBookById,
+  putBook,
 };

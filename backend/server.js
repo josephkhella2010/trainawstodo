@@ -8,11 +8,13 @@ const postBook = require("./ApiRoute/BookApi");
 const getBook = require("./ApiRoute/BookApi");
 const deleteBook = require("./ApiRoute/BookApi");
 const getSingleBook = require("./ApiRoute/BookApi");
+const EditBook = require("./ApiRoute/BookApi");
 
 app.use(postBook);
 app.use(getBook);
 app.use(deleteBook);
 app.use(getSingleBook);
+app.use(EditBook);
 
 app.listen(PORT, () =>
   console.log(`🚀 Server running on http://localhost:${PORT}`)

@@ -5,6 +5,7 @@ const {
   findAll,
   deleteBook,
   getBookById,
+  putBook,
 } = require("../schema/BookDymondb");
 
 router.post("/api/addbook", async (req, res) => {
@@ -54,6 +55,23 @@ router.get("/api/book/:id", async (req, res) => {
   } catch (error) {
     console.error("Error fetching book:", error);
     return res.status(500).json({ error: "Internal server error." });
+  }
+});
+router.put("/api/editBook/:id", async (req, res) => {
+  const { id } = req.params;
+  const { title, description, price } = req.body;
+
+  try {
+    if (!title || !description || !price) {
+      return res.status(400).json({ error: "All fields are required." });
+    }
+    const updatedBook = await putBook(id, { title, description, price });
+    updatedBook.title = title;
+    updatedBook.description = description;
+    updatedBook.price = price;
+    return res.status(200).json({ updatedBook, sms: "sucessfully updated" });
+  } catch (error) {
+    return res.status(500).json({ error: "error with put request." });
   }
 });
 
